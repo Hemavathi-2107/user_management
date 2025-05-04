@@ -8,6 +8,7 @@ from app.services.email_service import EmailService
 from app.services.jwt_service import decode_token
 from settings.config import Settings
 from fastapi import Depends
+from uuid import UUID
 
 def get_settings() -> Settings:
     """Return application settings."""
@@ -40,9 +41,10 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
         raise credentials_exception
     user_id: str = payload.get("sub")
     user_role: str = payload.get("role")
+    user_uuid: UUID = payload.get("user_id")
     if user_id is None or user_role is None:
         raise credentials_exception
-    return {"user_id": user_id, "role": user_role}
+    return {"user_id": user_id, "role": user_role, "user_uuid": user_uuid}
 
 def require_role(role: str):
     def role_checker(current_user: dict = Depends(get_current_user)):
