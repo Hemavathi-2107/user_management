@@ -45,6 +45,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           
+      - name: Wait for PostgreSQL
+        run: |
+            for i in {1..10}; do
+              pg_isready -h localhost -p 5432 && break || sleep 3;
+            done    
       - name: Run tests with Pytest
         env:
           DATABASE_URL: postgresql+asyncpg://user:password@localhost:5432/myappdb  # Configure the DATABASE_URL environment variable for tests
