@@ -72,7 +72,6 @@ class UserService:
             else:
                 new_user.verification_token = generate_verification_token()
                 
-
             session.add(new_user)
             await session.commit()
             await email_service.send_verification_email(new_user)
