@@ -40,7 +40,7 @@ services:
     networks:
       - app-network
 
-    minio:
+  minio:
       image: minio/minio:latest
       hostname: minio
       command: minio server --console-address ":9001" /data
@@ -71,6 +71,6 @@ volumes:
   postgres-data:
   pgadmin-data:
   minio_data:
-  
+
 networks:
   app-network:
