@@ -1,11 +1,13 @@
 from fastapi import FastAPI, Request
-from fastapi.middleware.cors import CORSMiddleware
 from starlette.responses import JSONResponse
+from starlette.middleware.cors import CORSMiddleware
 
+from builtins import Exception
 from app.database import Database
 from app.dependencies import get_settings
 from app.routers import user_routes
 from app.utils.api_description import getDescription
+from app.utils.minio_client import ensure_bucket_exists  # ← new import
 
 app = FastAPI(
     title="User Management",
@@ -16,36 +18,34 @@ app = FastAPI(
         "url": "http://www.example.com/support",
         "email": "support@example.com",
     },
-    license_info={
-        "name": "MIT",
-        "url": "https://opensource.org/licenses/MIT",
-    },
+    license_info={"name": "MIT", "url": "https://opensource.org/licenses/MIT"},
 )
 
-# 1) CORS middleware must be added before including routers
+# CORS middleware configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],            # or ["http://localhost"] for specific
-    allow_credentials=True,         # sends Access-Control-Allow-Credentials
-    allow_methods=["*"],            # sends Access-Control-Allow-Methods
-    allow_headers=["*"],            # sends Access-Control-Allow-Headers
-    expose_headers=["*"],           # sends Access-Control-Expose-Headers
-    max_age=600,                    # how long preflight can be cached (in seconds)
+    allow_origins=["*"],       # allow all origins
+    allow_credentials=True,    # allow cookies, auth headers
+    allow_methods=["*"],       # allow all HTTP methods
+    allow_headers=["*"],       # allow all headers
 )
 
-# 2) Application startup: initialize your DB
 @app.on_event("startup")
 async def startup_event():
+    # 1) Initialize DB
     settings = get_settings()
     Database.initialize(settings.database_url, settings.debug)
 
-# 3) Global exception handler
+    # 2) Ensure MinIO bucket exists before serving any upload requests
+    ensure_bucket_exists(settings.MINIO_BUCKET_NAME)
+
 @app.exception_handler(Exception)
-async def global_exception_handler(request: Request, exc: Exception):
+async def exception_handler(request: Request, exc: Exception):
+    # Generic 500 error handler
     return JSONResponse(
         status_code=500,
         content={"message": "An unexpected error occurred."},
     )
 
-# 4) Include your API routes
+# Mount your user routes
 app.include_router(user_routes.router)
