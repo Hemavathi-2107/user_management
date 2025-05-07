@@ -1,127 +1,177 @@
-Final Project: User Management System
-Project Objective
-The User Management System project aimed to develop a secure, feature-rich application for managing user accounts, roles, and permissions. It included functionalities such as user registration, authentication,  and advanced features like minio profile picture upload. The project emphasized modern development practices, integrating CI/CD pipelines, Dockerized deployment, and comprehensive testing. With a focus on scalability and security, the system was designed to meet real-world web application standards while offering a seamless user and administrator experience. The successful deployment to DockerHub highlighted the project's readiness for production.
+# User Management System🎉
+Repo Link: https://github.com/Hemavathi-2107/user_management
 
-The submission meets the following goals:
-Fixed five QA Issues/Bugs across the code.
-Implements a NEW feature-1Profile Picture Upload with Minio into the existing code.
-Created 10 NEW Tests for the new feature implemented.
-Includes a Reflection Document for the course.
+## Project Objective
 
-Setup and Preliminary Steps:
-1.Fork the Project Repository: Fork the project repository to my own GitHub account.
-2.Clone the repository to your local machine: Clone the forked repository to our local machine using the git clone command. This creates a local copy of the repository on our computer, enabling we make changes and run the project locally.
-git clone https://github.com/Hemavathi-2107/user_management.git
+The User Management System project aimed to develop a secure, feature-rich application for managing user accounts, roles, and permissions. It includes functionalities such as user registration, authentication, and advanced features like Minio profile picture upload. The project emphasizes modern development practices, integrating CI/CD pipelines, Dockerized deployment, and comprehensive testing. With a focus on scalability and security, the system meets real-world web application standards while offering a seamless user and administrator experience. Successful deployment to DockerHub highlights the project's production readiness.
 
-3.Change directory to the project
-cd user_management and open code in  vistual studio write cmd: code .
+### Goals
 
-4.Install and Setup Docker [compulsory]
-Verify the Project Setup: Follow the steps in the instructor video to set up the project using Docker. Docker allows our to package the application with all its dependencies into a standardized unit called a container. Verify that you can access the API documentation at http://localhost/docs and the database using PGAdmin at http://localhost:5050.
-5.Commands:
-docker compose up --build
-Running tests using pytest
-docker compose exec fastapi pytest
-Need to apply database migrationss: docker compose exec fastapi alembic upgrade head
-Upload Image to minIO : docker compose exec fastapi python3 -m app.utils.minio_client
+* Fixed five QA issues/bugs across the codebase.
+* Implemented a new feature: **Profile Picture Upload with Minio**.
+* Created **10 new tests** for the newly implemented feature.
+* Included a **Reflection Document** for the course.
 
-Access various components
-PgAdmin: http://localhost:5050
-FastAPI Swagger UI: http://localhost/docs
-MinIO console app open : http://localhost:9001
-MinIO API : http://localhost:9000
+---
 
-Issues Fixed
-The following issues were resolved:
+## Setup and Preliminary Steps
 
-[1- Fix_dockerfile_allow build_libc-bin_version permit](https://github.com/Hemavathi-2107/user_management/issues/1)
---allow-downgrades: Ensures that the package manager permits downgrading libc-bin to the specified version (2.36-9+deb12u7).
-Updated the Docker File to allow build.
-Resolved Application Errors: Fixed issues caused by mismatched library versions to ensure smooth application functionality.
+Follow these steps to get the project up and running locally:
 
-[Profile picture URL validation](https://github.com/Hemavathi-2107/user_management/issues/4)
-Ensured the provided URL is well-formed and points to an image file by validating that it ends with standard image extensions
-such as .jpg, .jpeg or .png.
-Implemented robust URL validation mechanisms to ensure secure and valid profile picture uploads. This includes verifying that the URL is properly structured, ends with acceptable image file extensions, and optionally confirming the URL's accessibility and that it references a valid image resource.
+1. **Fork the Repository**
 
-[User ID being passed as None in the user verification email has been resolved](https://github.com/Hemavathi-2107/user_management/issues/6)
-The problem of the User ID being None in the email verification process has been fixed.
-The email is now sent only once, when the user is either created or updated in the database.
-The code has been updated to ensure that the correct User ID is passed and displayed in the email verification, eliminating the
-issue of None being shown.
+   * Fork the project repository to your GitHub account.
 
-[Nickname Assign and Uniqueness in User Registration](https://github.com/Hemavathi-2107/user_management/issues/8)
-Removed the call to the generate_nickname() function when assigning a new user's nickname.
-Instead, the nickname is now directly set using the provided user data (user_data["nickname"]).
-The system checks for uniqueness of the provided nickname in the database.
+2. **Clone the Repository**
 
-[Password Validation in User Registration](https://github.com/Hemavathi-2107/user_management/issues/10)
-The implementation of password validation logic used during user registration to ensure strong and secure passwords.
-Key Features of the Validation:
-Minimum Length Requirement: Passwords must be at least 8 characters long.
-Uppercase Letter Check: Passwords must include at least one uppercase letter (A-Z).
-Lowercase Letter Check: Passwords must include at least one lowercase letter (a-z).
-Digit Check: Passwords must include at least one numeric digit (0-9).
-Special Character Requirement: Passwords must contain at least one special character from the set !@#$%^&*(),.?":{}|<>.
+   ```bash
+   git clone https://github.com/Hemavathi-2107/user_management.git
+   ```
 
-[Email verification](https://github.com/Hemavathi-2107/user_management/issues/15)
-Issue: User roles were downgraded unintentionally during email verification.
-Fix: Ensured roles are preserved during the email verification process.
+3. **Navigate to the Project Directory**
 
-Profile Picture Upload with Minio :
-This feature enhances the user profile management system by enabling users to upload and store profile pictures using Minio, a distributed object storage system. By personalizing their accounts with profile pictures, users gain a more engaging and tailored experience. The functionality focuses on secure storage, efficient retrieval, and seamless integration with the existing user profile management system.
+   ```bash
+   cd user_management
+   code .  # Open in VS Code (optional)
+   ```
 
-Description of Implementation:
+4. **Install and Setup Docker**
 
-1.API Endpoint for Uploading Profile Pictures:
-Create a dedicated API endpoint for handling profile picture uploads.
-Accept file uploads and validate the image format ( Supported e.g JPEG, PNG, GIF.) and size ( e.g.up to 5MB).
-2.Integration with Minio:
-Configure Minio to securely store uploaded images in dedicated bucket.
-Generate a unique key for each image to avoid overwriting files.
-Use Minio REST API to upload images and retrieve their URLs.
-3.Update User Profile Management:
-Add a new field in the user profile schema to store the profile picture URL.
-Update existing APIs to include the profile picture URL in responses.
-4.Image Retrieval:
-Fetch the profile picture URL from Minio when displaying user profiles.
-Use Minio to create presigned URLs for safe and effective retrieval.
-Provide a default profile picture for users without an uploaded image.
+   * Ensure Docker is installed and running on your machine.
 
-Final_user_management_output:  
+5. **Verify Project Setup**
 
+   * Follow the instructor’s video guide or run the commands below to build and start the services:
 
-Testing and Validation:
-Write Unit tests to verify the upload, storage, and retrieval workflows.
-Validate image formats and restrict sizes to ensure consistent uploads.
-Write Integration tests:
-tested every step of the process, from upload to display.
-Verify that API endpoints provide accurate information for both valid and invalid inputs.
+     ```bash
+     docker compose up --build
+     ```
+   * Check that you can access:
 
-Testing & QA
-Added 10 test cases: 
-Link for 1-4 testcases: [Test Cases Link](https://github.com/Hemavathi-2107/user_management/issues/19)
-Link for 5-8 testcases: https://github.com/Hemavathi-2107/user_management/issues/21
-Link for 9-10 testcases: https://github.com/Hemavathi-2107/user_management/issues/23
+     * API documentation: `http://localhost/docs`
+     * PGAdmin: `http://localhost:5050`
 
-Implemented unit tests to validate:
-1.Upload Profile Picture with Bytes
-2.Upload Profile Picture with File‑Like Object
-3.Upload Profile Picture Unsupported Extension
-4.Get Profile Picture URL
-5.Successful email send
-6.Authentication failure
-7.Recipient refused
-8.Generic exception on connection
-9.Missing template read
-10.Email-style inlining on HTML tags
+6. **Apply Database Migrations & Run Tests**
 
-Test Coverage above 91% : ![test coverage](image.png)
+   ```bash
+   # Run tests
+   docker compose exec fastapi pytest
 
-Docker Deployment:
-![alt text](image-1.png)
-![alt text](image-2.png)
-Docker Repository: https://hub.docker.com/repository/docker/hemarathinam/user_management/general
+   # Apply migrations
+   docker compose exec fastapi alembic upgrade head
 
-Reflection Document:
+   # Optional: Seed or interact with Minio client
+   docker compose exec fastapi python3 -m app.utils.minio_client
+   ```
 
+---
+
+## Accessing Services
+
+* **PgAdmin**: [http://localhost:5050](http://localhost:5050)
+* **Swagger UI (FastAPI Docs)**: [http://localhost/docs](http://localhost/docs)
+* **Minio Console**: [http://localhost:9001](http://localhost:9001)
+* **Minio API Endpoint**: [http://localhost:9000](http://localhost:9000)
+
+---
+
+## Issues Fixed
+
+1. **Fix Dockerfile allow build libc-bin version permit** ([#1](https://github.com/Hemavathi-2107/user_management/issues/1))
+
+   * Added `--allow-downgrades` for `libc-bin` to resolve version mismatches during build.
+
+2. **Profile picture URL validation** ([#4](https://github.com/Hemavathi-2107/user_management/issues/4))
+
+   * Ensured URLs end with valid image extensions (`.jpg`, `.jpeg`, `.png`) and are well-formed.
+
+3. **User ID `None` in verification email** ([#6](https://github.com/Hemavathi-2107/user_management/issues/6))
+
+   * Fixed email workflow to include the correct User ID upon creation or update.
+
+4. **Nickname uniqueness in registration** ([#8](https://github.com/Hemavathi-2107/user_management/issues/8))
+
+   * Removed `generate_nickname()` call; enforced user-provided nickname and database uniqueness checks.
+
+5. **Password validation in registration** ([#10](https://github.com/Hemavathi-2107/user_management/issues/10))
+
+   * Enforced strong-password rules: min length 8, uppercase, lowercase, digit, special character.
+
+6. **Email verification preserves roles** ([#15](https://github.com/Hemavathi-2107/user_management/issues/15))
+
+   * Fixed role assignments during the email verification process to prevent unintended downgrades.
+
+---
+
+## Profile Picture Upload with Minio
+
+Enhances user profiles with personalized images stored securely in Minio.
+
+### Implementation Details
+
+1. **API Endpoint**
+
+   * Created a dedicated route for profile picture uploads.
+   * Validates file type (`JPEG`, `PNG`, `GIF`) and size (max 5MB).
+
+2. **Minio Integration**
+
+   * Configured a Minio bucket for image storage.
+   * Generated unique object keys to prevent overwrites.
+   * Utilized Minio REST API for uploads and URL retrieval.
+
+3. **Profile Schema Update**
+
+   * Added a `profile_picture_url` field to the user model.
+   * Updated response serializers to include the image URL.
+
+4. **Image Retrieval**
+
+   * Fetched URLs from Minio for display.
+   * Implemented pre-signed URLs for secure, time-limited access.
+   * Provided a default avatar for users without images.
+
+---
+
+## Final Project Output
+
+* View the system in action: [User Management Output](https://github.com/Hemavathi-2107/user_management/blob/main/Documentation/user_management_output.md)
+
+---
+
+## Testing & QA
+
+* **Added 10 new test cases:**
+
+  * [Tests 1–4](https://github.com/Hemavathi-2107/user_management/issues/19)
+  * [Tests 5–8](https://github.com/Hemavathi-2107/user_management/issues/21)
+  * [Tests 9–10](https://github.com/Hemavathi-2107/user_management/issues/23)
+
+### Unit & Integration Tests
+
+1. Upload Profile Picture with bytes
+2. Upload Profile Picture with file-like object
+3. Upload with unsupported extension
+4. Get profile picture URL
+5. Successful email send
+6. Authentication failure
+7. Recipient refusal
+8. Generic connection exception
+9. Missing template error
+10. HTML inlining for email
+
+**Test Coverage:** >91% ![test coverage](image.png)
+
+---
+
+## Docker Deployment
+
+![Docker Compose UI](image-1.png)  ![DockerHub](image-2.png)
+
+**DockerHub Repository:** [hemarathinam/user\_management](https://hub.docker.com/repository/docker/hemarathinam/user_management/general)
+
+---
+
+## Reflection Document
+
+For an in-depth reflection, see: [Reflection Document](https://github.com/Hemavathi-2107/user_management/blob/main/Documentation/reflection.md)
